@@ -1,0 +1,15 @@
+*.bin
+*.class
+*.classpath
+*.iml
+*.jar
+*.java.orig
+*.lock
+*.iml
+.idea/
+**/.gradle/
+**/gradle/
+**/.idea
+**/.settings/
+**/build/
+**/target/
