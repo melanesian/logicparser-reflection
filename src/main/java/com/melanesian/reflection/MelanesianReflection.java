@@ -103,7 +103,7 @@ public class MelanesianReflection implements Reflection{
         ex = ex.substring(ex.indexOf("(") + 1);
         ex = ex.substring(0, ex.indexOf(")"));
 
-        return ex.split(",");
+        return ex.isEmpty() ? new Object[0]:ex.split(",");
     }
 
     /**

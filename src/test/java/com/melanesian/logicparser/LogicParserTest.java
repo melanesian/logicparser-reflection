@@ -22,6 +22,13 @@ public class LogicParserTest {
         Assert.assertTrue(logicParser.parseBussinessRule(createClientAdress(), rules));
     }
 
+    @Test
+    public void parseBussinessRule_InvokingMethod() throws ScriptException {
+        LogicParser logicParser = new LogicParser();
+        String rules = "<addresses.0.province.getProvinceName()> == 'province number 0'";
+        Assert.assertTrue(logicParser.parseBussinessRule(createClientAdress(), rules));
+    }
+
     private ClientAddress createClientAdress() {
         ClientAddress clientAddress = new ClientAddress();
         List<Address> addresses = new ArrayList<Address>();
