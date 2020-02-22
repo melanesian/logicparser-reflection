@@ -1,45 +1,25 @@
-package com.melanesian.reflection;
+package com.melanesian.logicparser;
 
 import com.melanesian.param.Address;
 import com.melanesian.param.City;
 import com.melanesian.param.ClientAddress;
 import com.melanesian.param.Province;
-import junit.framework.TestCase;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
-import java.lang.reflect.Field;
+import javax.script.ScriptException;
 import java.util.ArrayList;
 import java.util.List;
 
-@RunWith(JUnit4.class)
-public class MelanesianReflectionTest extends TestCase {
+import static org.junit.Assert.*;
 
-    MelanesianReflection melanesianReflection;
-
-    @Before
-    public void initialize() {
-        melanesianReflection = new MelanesianReflection();
-    }
+public class LogicParserTest {
 
     @Test
-    public void testGet() {
-        ClientAddress clientAddress = createClientAdress();
-        Assert.assertEquals( "province number 2",melanesianReflection.getObject(clientAddress, "addresses.2.province.provinceName"));
-        Assert.assertEquals( "city number 1",melanesianReflection.getObject(clientAddress, "addresses.1.city.cityName"));
-        Assert.assertEquals( "testing melanesian reflection",melanesianReflection.getObject(clientAddress, "detailAdress"));
-    }
-
-    @Test
-    public void testGetField() throws IllegalAccessException{
-        Province province = createProvince();
-        Field field = melanesianReflection.getField(province.getClass(), "provinceName");
-        field.setAccessible(true);
-        Assert.assertEquals("SOME PROVINCE NAME", field.get(province).toString());
-
+    public void parseBussinessRule() throws ScriptException {
+        LogicParser logicParser = new LogicParser();
+        String rules = "<addresses.0.province.provinceName> == 'province number 0'";
+        Assert.assertTrue(logicParser.parseBussinessRule(createClientAdress(), rules));
     }
 
     private ClientAddress createClientAdress() {
@@ -71,4 +51,5 @@ public class MelanesianReflectionTest extends TestCase {
         province.setProvinceCode("SOME PROVINCE CODE");
         return province;
     }
+
 }

@@ -3,10 +3,12 @@ package com.melanesian.reflection;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 
-public class MelanesianReflection {
+public class MelanesianReflection implements Reflection{
 
     /**
      * Returns the value of a (nested) field on a bean.
@@ -15,7 +17,7 @@ public class MelanesianReflection {
      * @param fieldName field name
      * @return java object
      */
-    public Object get(Object bean, String fieldName) {
+    public Object getObject(Object bean, String fieldName) {
         String[] nestedFields = StringUtils.split(fieldName, ".");
         Class < ? > componentClass = bean.getClass();
         Object value = bean;
@@ -24,7 +26,10 @@ public class MelanesianReflection {
         try {
             for (String nestedField : nestedFields) {
                 Field field;
-                if (isArray) {
+                if (nestedField.contains("(")) {
+                    Method method = getMethod(componentClass, nestedField);
+                    value = method.invoke(value, getMethodValue(nestedField));
+                } else if (isArray && value != null) {
                     value = ((List<?>) value).get(Integer.parseInt(nestedField));
                     isArray = false;
                 } else {
@@ -40,7 +45,7 @@ public class MelanesianReflection {
                     }
                 }
             }
-        } catch (IllegalAccessException iae) {
+        } catch (ClassCastException | InvocationTargetException | IllegalAccessException iae) {
             throw new IllegalStateException(iae);
         }
 
@@ -56,7 +61,7 @@ public class MelanesianReflection {
      * @param fieldName field name
      * @return java.lang.reflect.Field
      */
-    public Field getField(Class < ? > clazz, String fieldName) {
+    public Field getField(Class<?> clazz, String fieldName) {
         try {
             return clazz.getDeclaredField(fieldName);
         } catch (NoSuchFieldException nsf) {
@@ -65,5 +70,57 @@ public class MelanesianReflection {
             }
             throw new IllegalStateException("failed to get field");
         }
+    }
+
+    /**
+     *
+     * @param claxx
+     * @param method
+     * @return
+     */
+    public Method getMethod(Class<?> claxx, String method) {
+        try {
+            String methodName = method.replaceAll("\\([^)]*\\)", "");
+            Class<?>[] parameters = getParameterTypes(method);
+
+            return claxx.getDeclaredMethod(methodName, parameters);
+        } catch (NoSuchMethodException nsf) {
+            if (claxx.getSuperclass() != null) {
+                return getMethod(claxx.getSuperclass(), method);
+            }
+            throw new IllegalStateException("failed to get method");
+        }
+    }
+
+    /**
+     *
+     * @param method
+     * @return
+     */
+    private Object[] getMethodValue(String method) {
+        String ex = method;
+
+        ex = ex.substring(ex.indexOf("(") + 1);
+        ex = ex.substring(0, ex.indexOf(")"));
+
+        return ex.split(",");
+    }
+
+    /**
+     *
+     * @param method
+     * @return
+     */
+    private Class<?>[] getParameterTypes(String method) {
+        Object[] values = getMethodValue(method);
+        Class<?>[] classes = new Class[values.length];
+
+        for (int i=0; i<values.length; i++) {
+            if (!StringUtils.isNumeric(values[i].toString()))
+                classes[i] = Object.class;
+            else if (StringUtils.isNumeric(values[i].toString()))
+                classes[i] = Integer.class;
+        }
+        return classes;
     }
 }

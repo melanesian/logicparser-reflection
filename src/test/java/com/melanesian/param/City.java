@@ -1,4 +1,4 @@
-package com.melanesian.reflection.param;
+package com.melanesian.param;
 
 public class City {
 
