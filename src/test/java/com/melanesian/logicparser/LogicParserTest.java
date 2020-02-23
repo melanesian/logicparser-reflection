@@ -29,6 +29,34 @@ public class LogicParserTest {
         Assert.assertTrue(logicParser.parseBussinessRule(createClientAdress(), rules));
     }
 
+    @Test
+    public void containsObjectTest() throws ScriptException{
+        ClientAddress clientAddress = createClientAdress();
+        LogicParser logicParser = new LogicParser();
+        Assert.assertTrue(logicParser.parseBussinessRule(clientAddress, "<containAddressName(address name number 1)> && <addresses.0.province.getProvinceName()> == 'province number 0'"));
+    }
+
+    @Test
+    public void testing_Invoke_Single_Boolean() throws ScriptException {
+        LogicParser logicParser = new LogicParser();
+        boolean logicTest = logicParser.parseBussinessRule(createClientAdress(), "<containAddressName(address name number 1)>");
+        Assert.assertTrue(logicTest);
+    }
+
+    @Test
+    public void testing_Invoke_Single_Boolean_With_2_param() throws ScriptException {
+        LogicParser logicParser = new LogicParser();
+        boolean logicTest = logicParser.parseBussinessRule(createClientAdress(), "<containAddressNameAndCityName(address name number 1,city number 1)>");
+        Assert.assertTrue(logicTest);
+    }
+
+    @Test
+    public void testing_Invoke_Single_Boolean_With_2_param_Test_False() throws ScriptException {
+        LogicParser logicParser = new LogicParser();
+        boolean logicTest = logicParser.parseBussinessRule(createClientAdress(), "<containAddressNameAndCityName(address name number 1,city number 2)>");
+        Assert.assertFalse(logicTest);
+    }
+
     private ClientAddress createClientAdress() {
         ClientAddress clientAddress = new ClientAddress();
         List<Address> addresses = new ArrayList<Address>();

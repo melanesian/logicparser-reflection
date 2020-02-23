@@ -22,4 +22,25 @@ public class ClientAddress {
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
     }
+
+    public boolean containAddressName(Object addressName) {
+        if (addresses != null) {
+            for (Address address : this.addresses){
+                if (address.getAddressName().equals(addressName.toString()))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean containAddressNameAndCityName(Object addressName, Object cityName) {
+        if (addresses != null) {
+            for (Address address : this.addresses){
+                if (address.getAddressName().equals(addressName.toString()) && address.getCity().getCityName().equals(cityName.toString())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

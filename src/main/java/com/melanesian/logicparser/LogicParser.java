@@ -21,9 +21,17 @@ public class LogicParser {
 
     public LogicParser(ScriptEngine scriptEngine) {
         this.scriptEngine = scriptEngine;
+        this.reflection = new MelanesianReflection();
     }
 
     public LogicParser(Reflection reflection) {
+        ScriptEngineManager seManager = new ScriptEngineManager();
+        this.reflection = reflection;
+        this.scriptEngine = seManager.getEngineByName("js");
+    }
+
+    public LogicParser(Reflection reflection, ScriptEngine scriptEngine) {
+        this.scriptEngine = scriptEngine;
         this.reflection = reflection;
     }
 
@@ -35,7 +43,7 @@ public class LogicParser {
      * @throws ScriptException
      */
     public boolean parseBussinessRule(Object bean, String rule) throws ScriptException {
-        String[] ruleTokens = rule.split(" ");
+        String[] ruleTokens = rule.split("\\s+(?![^<>]*>)");
 
         for (int i=0; i<ruleTokens.length; i++) {
             if (ruleTokens[i].contains("<")){
@@ -57,10 +65,9 @@ public class LogicParser {
         takeOutParenthess = takeOutParenthess.substring(takeOutParenthess.indexOf("<") + 1);
         takeOutParenthess = takeOutParenthess.substring(0, takeOutParenthess.indexOf(">"));
         Object tokenValue = reflection.getObject(bean, takeOutParenthess);
-        if (tokenValue != null && (!tokenValue.toString().equalsIgnoreCase("true")
-                || !tokenValue.toString().equalsIgnoreCase("false")))
-            tokenValue = "'".concat(tokenValue.toString()).concat("'");
-
-        return tokenValue;
+        if (tokenValue.toString().equalsIgnoreCase("true") || tokenValue.toString().equalsIgnoreCase("false"))
+            return tokenValue;
+        else
+            return "'".concat(tokenValue.toString()).concat("'");
     }
 }
