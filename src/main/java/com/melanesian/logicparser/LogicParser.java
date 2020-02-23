@@ -7,67 +7,70 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class LogicParser {
 
-    private ScriptEngine scriptEngine;
-    private Reflection reflection;
+	private ScriptEngine scriptEngine;
+	private Reflection reflection;
 
-    public LogicParser() {
-        ScriptEngineManager seManager = new ScriptEngineManager();
-        this.reflection = new MelanesianReflection();
-        this.scriptEngine = seManager.getEngineByName("js");
+	public LogicParser() {
+		ScriptEngineManager seManager = new ScriptEngineManager();
+		this.reflection = new MelanesianReflection();
+		this.scriptEngine = seManager.getEngineByName("js");
 
-    }
+	}
 
-    public LogicParser(ScriptEngine scriptEngine) {
-        this.scriptEngine = scriptEngine;
-        this.reflection = new MelanesianReflection();
-    }
+	public LogicParser(ScriptEngine scriptEngine) {
+		this.scriptEngine = scriptEngine;
+		this.reflection = new MelanesianReflection();
+	}
 
-    public LogicParser(Reflection reflection) {
-        ScriptEngineManager seManager = new ScriptEngineManager();
-        this.reflection = reflection;
-        this.scriptEngine = seManager.getEngineByName("js");
-    }
+	public LogicParser(Reflection reflection) {
+		ScriptEngineManager seManager = new ScriptEngineManager();
+		this.reflection = reflection;
+		this.scriptEngine = seManager.getEngineByName("js");
+	}
 
-    public LogicParser(Reflection reflection, ScriptEngine scriptEngine) {
-        this.scriptEngine = scriptEngine;
-        this.reflection = reflection;
-    }
+	public LogicParser(Reflection reflection, ScriptEngine scriptEngine) {
+		this.scriptEngine = scriptEngine;
+		this.reflection = reflection;
+	}
 
-    /**
-     *
-     * @param bean
-     * @param rule
-     * @return
-     * @throws ScriptException
-     */
-    public boolean parseBussinessRule(Object bean, String rule) throws ScriptException {
-        String[] ruleTokens = rule.split("\\s+(?![^<>]*>)");
+	/**
+	 *
+	 * @param bean
+	 * @param rule
+	 * @return
+	 * @throws ScriptException
+	 */
+	public boolean parseBussinessRule(Object bean, String rule) throws ScriptException {
+		String[] ruleTokens = rule.split("\\s+(?![^<>]*>)");
 
-        for (int i=0; i<ruleTokens.length; i++) {
-            if (ruleTokens[i].contains("<")){
-                Object ruleToken = replacingBeanValues(bean, ruleTokens[i]);
-                ruleTokens[i] = ruleToken != null ? ruleToken.toString() : "false";
-            }
-        }
-        return (Boolean) scriptEngine.eval(String.join(" ", ruleTokens));
-    }
+		for (int i = 0; i < ruleTokens.length; i++) {
+			if (ruleTokens[i].contains("<")) {
+				Object ruleToken = replacingBeanValues(bean, ruleTokens[i]);
+				ruleTokens[i] = ruleToken != null ? ruleToken.toString() : "false";
+			}
+		}
+		return (Boolean) scriptEngine.eval(String.join(" ", ruleTokens));
+	}
 
-    /**
-     *
-     * @param bean
-     * @param ruleToken
-     * @return
-     */
-    private Object replacingBeanValues (Object bean, String ruleToken) {
-        String takeOutParenthess = ruleToken;
-        takeOutParenthess = takeOutParenthess.substring(takeOutParenthess.indexOf("<") + 1);
-        takeOutParenthess = takeOutParenthess.substring(0, takeOutParenthess.indexOf(">"));
-        Object tokenValue = reflection.getObject(bean, takeOutParenthess);
-        if (tokenValue.toString().equalsIgnoreCase("true") || tokenValue.toString().equalsIgnoreCase("false"))
-            return tokenValue;
-        else
-            return "'".concat(tokenValue.toString()).concat("'");
-    }
+	/**
+	 *
+	 * @param bean
+	 * @param ruleToken
+	 * @return
+	 */
+	private Object replacingBeanValues(Object bean, String ruleToken) {
+		String takeOutParenthess = ruleToken;
+		takeOutParenthess = takeOutParenthess.substring(takeOutParenthess.indexOf('<') + 1);
+		takeOutParenthess = takeOutParenthess.substring(0, takeOutParenthess.indexOf('>'));
+		Object tokenValue = reflection.getObject(bean, takeOutParenthess);
+		if (tokenValue.toString().equalsIgnoreCase("true") || tokenValue.toString().equalsIgnoreCase("false")
+				|| StringUtils.isNumeric(tokenValue.toString()))
+			return tokenValue;
+		else
+			return "'".concat(tokenValue.toString()).concat("'");
+	}
 }

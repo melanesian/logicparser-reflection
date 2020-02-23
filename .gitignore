@@ -13,3 +13,8 @@
 **/.settings/
 **/build/
 **/target/
+.project
+.settings/
+.idea/
+*.iws
+.DS_Store
