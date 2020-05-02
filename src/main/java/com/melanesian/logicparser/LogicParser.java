@@ -2,6 +2,7 @@ package com.melanesian.logicparser;
 
 import com.melanesian.reflection.MelanesianReflection;
 import com.melanesian.reflection.Reflection;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -62,10 +63,11 @@ public class LogicParser {
      */
     private Object replacingBeanValues (Object bean, String ruleToken) {
         String takeOutParenthess = ruleToken;
-        takeOutParenthess = takeOutParenthess.substring(takeOutParenthess.indexOf("<") + 1);
-        takeOutParenthess = takeOutParenthess.substring(0, takeOutParenthess.indexOf(">"));
+        takeOutParenthess = takeOutParenthess.substring(takeOutParenthess.indexOf('<') + 1);
+        takeOutParenthess = takeOutParenthess.substring(0, takeOutParenthess.indexOf('>'));
         Object tokenValue = reflection.getObject(bean, takeOutParenthess);
-        if (tokenValue.toString().equalsIgnoreCase("true") || tokenValue.toString().equalsIgnoreCase("false"))
+        if (tokenValue.toString().equalsIgnoreCase("true") || tokenValue.toString().equalsIgnoreCase("false")
+                || StringUtils.isNumeric(tokenValue.toString()))
             return tokenValue;
         else
             return "'".concat(tokenValue.toString()).concat("'");

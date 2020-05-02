@@ -18,11 +18,24 @@ import java.util.List;
 @RunWith(JUnit4.class)
 public class MelanesianReflectionTest extends TestCase {
 
-    MelanesianReflection melanesianReflection;
+    private MelanesianReflection melanesianReflection;
 
     @Before
     public void initialize() {
         melanesianReflection = new MelanesianReflection();
+    }
+
+    @Test
+    public void testInvokingMethod() {
+        NumberParam numberParam = new NumberParam();
+
+        Assert.assertNull(melanesianReflection.getObject(numberParam, "stringCallback(1, terlalu lama sendiri)"));
+
+        Assert.assertEquals("My name is Melanesian, i'am 23 years old, my sallary is around 2000000.0 Rupiah and i already have corona",
+                melanesianReflection.getObject(numberParam, "aStatement(23, 2000000D, true)"));
+
+        Assert.assertEquals("My name is Melanesian, i'am 17 years old, my sallary is around 2000000.0 Rupiah and i dont have corona",
+                melanesianReflection.getObject(numberParam, "aStatement(17, 2000000D, false)"));
     }
 
     @Test
@@ -40,6 +53,21 @@ public class MelanesianReflectionTest extends TestCase {
         field.setAccessible(true);
         Assert.assertEquals("SOME PROVINCE NAME", field.get(province).toString());
 
+    }
+
+
+    public class NumberParam {
+        @SuppressWarnings("unused method. This method called by reflection")
+        public void stringCallback(int value, String statement) {
+            System.out.println(statement+" "+value);
+        }
+
+        @SuppressWarnings("unused method. This method called by reflection")
+        public String aStatement(int value, Double doubleValue, boolean isHaveCorona) {
+            return "My name is Melanesian, i'am "+value+
+                    " years old, my sallary is around "+doubleValue+" Rupiah "
+                    +"and i "+(isHaveCorona?"already have":"dont have")+" corona";
+        }
     }
 
     private ClientAddress createClientAdress() {
