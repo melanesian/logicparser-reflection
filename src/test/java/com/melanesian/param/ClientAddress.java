@@ -23,7 +23,7 @@ public class ClientAddress {
         this.addresses = addresses;
     }
 
-    public boolean containAddressName(Object addressName) {
+    public boolean containAddressName(String addressName) {
         if (addresses != null) {
             for (Address address : this.addresses){
                 if (address.getAddressName().equals(addressName.toString()))
@@ -33,7 +33,7 @@ public class ClientAddress {
         return false;
     }
 
-    public boolean containAddressNameAndCityName(Object addressName, Object cityName) {
+    public boolean containAddressNameAndCityName(String addressName, String cityName) {
         if (addresses != null) {
             for (Address address : this.addresses){
                 if (address.getAddressName().equals(addressName.toString()) && address.getCity().getCityName().equals(cityName.toString())) {
