@@ -22,6 +22,8 @@ public class MelanesianReflection implements Reflection{
 
     /**
      * Returns the value of a (nested) field on a bean.
+     * NOTE:    This method need to refactor and must be put inside interpreter, so all reflection expression must be
+     *          triggered by same pattern
      *
      * @param bean      java bean
      * @param fieldName field name
@@ -75,6 +77,7 @@ public class MelanesianReflection implements Reflection{
     /**
      * Get the specified field on the class. If the field is not found on the class itself will recursively check
      * the superclass.
+     * NOTE:    Move to ExpressionHelper
      *
      * @param clazz object class
      * @param fieldName field name
@@ -95,6 +98,8 @@ public class MelanesianReflection implements Reflection{
      *
      * Get the specified method on the class. If the method is not found on the class
      * itself will recursively check the superclass.
+     * NOTE:    Move to ExpressionHelper
+     *
      * @param claxx object class
      * @param method method name
      * @return java.lang.reflect.Method
@@ -115,6 +120,7 @@ public class MelanesianReflection implements Reflection{
 
     /**
      * Returning parameter types of method
+     * NOTE:    Move to ExpressionHelper
      *
      * @param method String of method
      * @return array of parameter types
@@ -140,6 +146,7 @@ public class MelanesianReflection implements Reflection{
 
     /**
      * Generate method parameter values
+     * NOTE:    Move to ExpressionHelper
      *
      * @param method method initialize
      * @return array of java.lang.Object
@@ -158,6 +165,7 @@ public class MelanesianReflection implements Reflection{
 
     /**
      * checking all values and convert to suggested data type
+     * NOTE:    Move to ExpressionHelper
      *
      * @param results array of objects
      * @param values method parameter values
