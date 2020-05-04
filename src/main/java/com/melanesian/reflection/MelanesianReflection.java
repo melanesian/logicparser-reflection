@@ -1,5 +1,7 @@
 package com.melanesian.reflection;
 
+import com.melanesian.reflection.interpreter.Expression;
+import com.melanesian.reflection.interpreter.ExpressionFactory;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
@@ -40,6 +42,10 @@ public class MelanesianReflection implements Reflection{
                 if (nestedField.contains("(")) {
                     Method method = getMethod(componentClass, nestedField);
                     value = method.invoke(value, getParameters(nestedField));
+                    isArray = false;
+                } else if(nestedField.contains("{")){
+                    Expression expression = ExpressionFactory.newInstance().gettingExpression(value, nestedField);
+                    value = expression.invokeExpression();
                     isArray = false;
                 } else if (isArray) {
                     value = ((List<?>) value).get(Integer.parseInt(nestedField));

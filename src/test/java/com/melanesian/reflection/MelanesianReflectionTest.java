@@ -55,6 +55,21 @@ public class MelanesianReflectionTest extends TestCase {
 
     }
 
+    @Test
+    public void testGetWithSingleParamArrayFiltering() {
+        ClientAddress clientAddress = createClientAdress();
+        Assert.assertEquals("address name number 0",
+                melanesianReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 0}.addressName"));
+        Assert.assertEquals("address name number 1",
+                melanesianReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 1}.addressName"));
+        Assert.assertEquals("address name number 2",
+                melanesianReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 2}.addressName"));
+        Assert.assertEquals("address name number 3",
+                melanesianReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 3}.addressName"));
+        Assert.assertEquals("address name number 4",
+                melanesianReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 4}.addressName"));
+    }
+
 
     public class NumberParam {
         @SuppressWarnings("unused method. This method called by reflection")
