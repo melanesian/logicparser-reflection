@@ -9,8 +9,8 @@ import java.util.ArrayList;
 public class SPArrayFilter extends Expression {
 
     @SuppressWarnings("unused method. This method call at ExpressionFactory using reflection")
-    public SPArrayFilter(Object value, String params) {
-        super(value, params);
+    public SPArrayFilter(Object value, String expression) {
+        super(value, expression);
     }
 
     @Override

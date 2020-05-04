@@ -8,8 +8,8 @@ public abstract class Expression extends ExpressionHelper {
     private Object value;
     private String[] params;
 
-    Expression(Object value, String params) {
-        this.params = splittingAllParamsFromExpression(params);
+    Expression(Object value, String expression) {
+        this.params = getExpressionParams(expression);
         this.value = value;
     }
 
@@ -21,9 +21,5 @@ public abstract class Expression extends ExpressionHelper {
 
     Object getValue() {
         return value;
-    }
-
-    private String[] splittingAllParamsFromExpression(String expression) {
-        return getExpressionParams(expression);
     }
 }
