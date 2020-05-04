@@ -70,6 +70,12 @@ public class MelanesianReflectionTest extends TestCase {
                 melanesianReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 4}.addressName"));
     }
 
+    @Test
+    public void testGetWithSingleParamArrayFiltering_CannotFind() {
+        ClientAddress clientAddress = createClientAdress();
+        Assert.assertNull(melanesianReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address namumber 0}"));
+    }
+
 
     public class NumberParam {
         @SuppressWarnings("unused method. This method called by reflection")
