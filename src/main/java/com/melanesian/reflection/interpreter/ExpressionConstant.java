@@ -32,4 +32,6 @@ public class ExpressionConstant {
     public static final String PARENTHESS_CLOSED_STRING = ")";
 
     static final String ERROR_MESSAGE_NO_SUCH_A_EXPRESSION = "Cannot find expression %s at factory";
+
+    static final String EXPRESSION_BASE_PACKAGE = "com.melanesian.reflection.interpreter.";
 }

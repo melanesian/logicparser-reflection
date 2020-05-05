@@ -14,8 +14,9 @@ public class ExpressionFactory extends ReflectionHelper {
     public  Expression gettingExpression(Object object, String expression) {
         String expressionName = getExpressionName(expression);
         try {
-            Class expressionClass = Class.forName("com.melanesian.reflection.interpreter.".concat(expressionName));
-            Constructor expressionConstructor = expressionClass.getConstructor(Object.class, String.class);
+            Class<?> expressionClass = Class.forName(ExpressionConstant.EXPRESSION_BASE_PACKAGE.concat(expressionName));
+            Class<?>[] types = new Class[] {Object.class, String.class};
+            Constructor<?> expressionConstructor = expressionClass.getConstructor(types);
             return (Expression) expressionConstructor.newInstance(object, expression);
         } catch (ClassNotFoundException clNFoundEx) {
             throw new IllegalStateException(String.format(ExpressionConstant.ERROR_MESSAGE_NO_SUCH_A_EXPRESSION, expressionName));

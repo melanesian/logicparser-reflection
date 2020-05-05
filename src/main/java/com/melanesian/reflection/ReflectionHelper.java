@@ -74,7 +74,7 @@ public class ReflectionHelper {
      * @param method method name
      * @return java.lang.reflect.Method
      */
-    protected Method getMethod(Class<?> claxx, String method) {
+    Method getMethod(Class<?> claxx, String method) {
         try {
             String methodName = method.replaceAll("\\".concat(ExpressionConstant.PARENTHESS_OPEN_STRING).concat("[^")
                     .concat(ExpressionConstant.PARENTHESS_CLOSED_STRING)
