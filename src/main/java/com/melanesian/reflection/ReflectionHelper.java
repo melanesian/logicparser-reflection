@@ -1,16 +1,15 @@
 package com.melanesian.reflection;
 
-import com.melanesian.reflection.interpreter.Expression;
-import com.melanesian.reflection.interpreter.ExpressionFactory;
-import org.apache.commons.lang3.StringUtils;
+import com.melanesian.reflection.DataType;
+import com.melanesian.reflection.interpreter.ExpressionConstant;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 
-
-public class MelanesianReflection implements Reflection{
+/**
+ * created by dimasNaresh(thread009)
+ */
+public class ReflectionHelper {
 
     private DataType[] types = new DataType[]{
             DataType.INTEGER,
@@ -21,63 +20,33 @@ public class MelanesianReflection implements Reflection{
     };
 
     /**
-     * Returns the value of a (nested) field on a bean.
-     * NOTE:    This method need to refactor and must be put inside interpreter, so all reflection expression must be
-     *          triggered by same pattern
+     * Getting expression name
      *
-     * @param bean      java bean
-     * @param fieldName field name
-     * @return java object
+     * @param expression full expression
+     * @return String of expression name
      */
-    public Object getObject(Object bean, String fieldName) {
-        if (bean == null || fieldName == null)
-            throw new IllegalStateException(String.format("bean: %s, fieldName: %s", bean, fieldName));
+    protected String getExpressionName(String expression) {
+        return expression.replaceAll("\\{[^)]*\\}", "");
+    }
 
-        String[] nestedFields = StringUtils.split(fieldName, ".");
-        Class < ? > componentClass = bean.getClass();
-        Object value = bean;
-        boolean isArray = false;
+    /**
+     * Getting expression parameters
+     *
+     * @param expression full expression
+     * @return Array of String parameters
+     */
+    protected String[] getExpressionParams(String expression) {
+        String ex = expression;
 
-        try {
-            for (String nestedField : nestedFields) {
-                Field field;
-                if (nestedField.contains("(")) {
-                    Method method = getMethod(componentClass, nestedField);
-                    value = method.invoke(value, getParameters(nestedField));
-                    isArray = false;
-                } else if(nestedField.contains("{")){
-                    Expression expression = ExpressionFactory.newInstance().gettingExpression(value, nestedField);
-                    value = expression.invokeExpression();
-                    isArray = false;
-                } else if (isArray) {
-                    value = ((List<?>) value).get(Integer.parseInt(nestedField));
-                    isArray = false;
-                } else {
-                    field = getField(componentClass, nestedField);
-                    field.setAccessible(true);
-                    value = field.get(value);
-                    isArray = false;
-                }
+        ex = ex.substring(ex.indexOf(ExpressionConstant.BRACKET_OPEN_CHARACTER) + 1);
+        ex = ex.substring(0, ex.indexOf(ExpressionConstant.BRACKET_CLOSED_CHARACTER));
 
-                if (value != null) {
-                    componentClass = value.getClass();
-                    if (value instanceof List<?>) {
-                        isArray = true;
-                    }
-                }
-            }
-        } catch (ClassCastException | InvocationTargetException | IllegalAccessException iae) {
-            throw new IllegalStateException(iae);
-        }
-
-        return value;
-
+        return ex.split(ExpressionConstant.COMMA_STRING);
     }
 
     /**
      * Get the specified field on the class. If the field is not found on the class itself will recursively check
      * the superclass.
-     * NOTE:    Move to ExpressionHelper
      *
      * @param clazz object class
      * @param fieldName field name
@@ -98,13 +67,13 @@ public class MelanesianReflection implements Reflection{
      *
      * Get the specified method on the class. If the method is not found on the class
      * itself will recursively check the superclass.
-     * NOTE:    Move to ExpressionHelper
+     * NOTE:    Move to ReflectionHelper
      *
      * @param claxx object class
      * @param method method name
      * @return java.lang.reflect.Method
      */
-    public Method getMethod(Class<?> claxx, String method) {
+    protected Method getMethod(Class<?> claxx, String method) {
         try {
             String methodName = method.replaceAll("\\([^)]*\\)", "");
             Class<?>[] parameters = getParameterTypes(method);
@@ -120,7 +89,7 @@ public class MelanesianReflection implements Reflection{
 
     /**
      * Returning parameter types of method
-     * NOTE:    Move to ExpressionHelper
+     * NOTE:    Move to ReflectionHelper
      *
      * @param method String of method
      * @return array of parameter types
@@ -146,16 +115,16 @@ public class MelanesianReflection implements Reflection{
 
     /**
      * Generate method parameter values
-     * NOTE:    Move to ExpressionHelper
+     * NOTE:    Move to ReflectionHelper
      *
      * @param method method initialize
      * @return array of java.lang.Object
      */
-    private Object[] getParameters(String method) {
+    protected Object[] getParameters(String method) {
         String ex = method;
 
-        ex = ex.substring(ex.indexOf('(') + 1);
-        ex = ex.substring(0, ex.indexOf(')'));
+        ex = ex.substring(ex.indexOf(ExpressionConstant.PARENTHESS_OPEN_CHARACTER) + 1);
+        ex = ex.substring(0, ex.indexOf(ExpressionConstant.PARENTHESS_CLOSED_CHARACTER));
 
         String[] valueSplitter = ex.split(",");
 
@@ -165,7 +134,7 @@ public class MelanesianReflection implements Reflection{
 
     /**
      * checking all values and convert to suggested data type
-     * NOTE:    Move to ExpressionHelper
+     * NOTE:    Move to ReflectionHelper
      *
      * @param results array of objects
      * @param values method parameter values

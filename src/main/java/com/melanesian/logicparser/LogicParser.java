@@ -1,6 +1,6 @@
 package com.melanesian.logicparser;
 
-import com.melanesian.reflection.MelanesianReflection;
+import com.melanesian.reflection.NestedReflection;
 import com.melanesian.reflection.Reflection;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,14 +15,14 @@ public class LogicParser {
 
     public LogicParser() {
         ScriptEngineManager seManager = new ScriptEngineManager();
-        this.reflection = new MelanesianReflection();
+        this.reflection = new NestedReflection();
         this.scriptEngine = seManager.getEngineByName("js");
 
     }
 
     public LogicParser(ScriptEngine scriptEngine) {
         this.scriptEngine = scriptEngine;
-        this.reflection = new MelanesianReflection();
+        this.reflection = new NestedReflection();
     }
 
     public LogicParser(Reflection reflection) {

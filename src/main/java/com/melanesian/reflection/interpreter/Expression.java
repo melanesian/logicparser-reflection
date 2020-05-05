@@ -1,9 +1,11 @@
 package com.melanesian.reflection.interpreter;
 
+import com.melanesian.reflection.ReflectionHelper;
+
 /**
  * created by dimasNaresh(thread009)
  */
-public abstract class Expression extends ExpressionHelper {
+public abstract class Expression extends ReflectionHelper {
 
     private Object value;
     private String[] params;

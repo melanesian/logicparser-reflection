@@ -1,5 +1,6 @@
 package com.melanesian.reflection;
 
+import com.melanesian.logicparser.tokenizer.Tokenizer;
 import com.melanesian.param.Address;
 import com.melanesian.param.City;
 import com.melanesian.param.ClientAddress;
@@ -16,40 +17,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(JUnit4.class)
-public class MelanesianReflectionTest extends TestCase {
+public class NestedReflectionTest extends TestCase {
 
-    private MelanesianReflection melanesianReflection;
+    private NestedReflection nestedReflection;
 
     @Before
     public void initialize() {
-        melanesianReflection = new MelanesianReflection();
+        nestedReflection = new NestedReflection();
+    }
+
+    @Test
+    public void guns() {
+        Tokenizer tokenizer = new Tokenizer("addressName == 'something' && cityName == 'city of duran'");
+        tokenizer.process();
+        System.out.println(tokenizer);
     }
 
     @Test
     public void testInvokingMethod() {
         NumberParam numberParam = new NumberParam();
 
-        Assert.assertNull(melanesianReflection.getObject(numberParam, "stringCallback(1, terlalu lama sendiri)"));
+        Assert.assertNull(nestedReflection.getObject(numberParam, "stringCallback(1, terlalu lama sendiri)"));
 
         Assert.assertEquals("My name is Melanesian, i'am 23 years old, my sallary is around 2000000.0 Rupiah and i already have corona",
-                melanesianReflection.getObject(numberParam, "aStatement(23, 2000000D, true)"));
+                nestedReflection.getObject(numberParam, "aStatement(23, 2000000D, true)"));
 
         Assert.assertEquals("My name is Melanesian, i'am 17 years old, my sallary is around 2000000.0 Rupiah and i dont have corona",
-                melanesianReflection.getObject(numberParam, "aStatement(17, 2000000D, false)"));
+                nestedReflection.getObject(numberParam, "aStatement(17, 2000000D, false)"));
     }
 
     @Test
     public void testGet() {
         ClientAddress clientAddress = createClientAdress();
-        Assert.assertEquals( "province number 2",melanesianReflection.getObject(clientAddress, "addresses.2.province.provinceName"));
-        Assert.assertEquals( "city number 1",melanesianReflection.getObject(clientAddress, "addresses.1.city.cityName"));
-        Assert.assertEquals( "testing melanesian reflection",melanesianReflection.getObject(clientAddress, "detailAdress"));
+        Assert.assertEquals( "province number 2", nestedReflection.getObject(clientAddress, "addresses.2.province.provinceName"));
+        Assert.assertEquals( "city number 1", nestedReflection.getObject(clientAddress, "addresses.1.city.cityName"));
+        Assert.assertEquals( "testing melanesian reflection", nestedReflection.getObject(clientAddress, "detailAdress"));
     }
 
     @Test
     public void testGetField() throws IllegalAccessException{
         Province province = createProvince();
-        Field field = melanesianReflection.getField(province.getClass(), "provinceName");
+        Field field = nestedReflection.getField(province.getClass(), "provinceName");
         field.setAccessible(true);
         Assert.assertEquals("SOME PROVINCE NAME", field.get(province).toString());
 
@@ -59,21 +67,21 @@ public class MelanesianReflectionTest extends TestCase {
     public void testGetWithSingleParamArrayFiltering() {
         ClientAddress clientAddress = createClientAdress();
         Assert.assertEquals("address name number 0",
-                melanesianReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 0}.addressName"));
+                nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 0}.addressName"));
         Assert.assertEquals("address name number 1",
-                melanesianReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 1}.addressName"));
+                nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 1}.addressName"));
         Assert.assertEquals("address name number 2",
-                melanesianReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 2}.addressName"));
+                nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 2}.addressName"));
         Assert.assertEquals("address name number 3",
-                melanesianReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 3}.addressName"));
+                nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 3}.addressName"));
         Assert.assertEquals("address name number 4",
-                melanesianReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 4}.addressName"));
+                nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 4}.addressName"));
     }
 
     @Test
     public void testGetWithSingleParamArrayFiltering_CannotFind() {
         ClientAddress clientAddress = createClientAdress();
-        Assert.assertNull(melanesianReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address namumber 0}"));
+        Assert.assertNull(nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address namumber 0}"));
     }
 
 

@@ -1,12 +1,14 @@
 package com.melanesian.reflection.interpreter;
 
+import com.melanesian.reflection.ReflectionHelper;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
  * created by dimasNaresh(thread009)
  */
-public class ExpressionFactory extends ExpressionHelper {
+public class ExpressionFactory extends ReflectionHelper {
 
 
     public  Expression gettingExpression(Object object, String expression) {
