@@ -39,7 +39,8 @@ public class NestedReflection extends ReflectionHelper implements Reflection {
                     isArray = false;
                 } else if (nestedField.contains(ExpressionConstant.PARENTHESS_OPEN_STRING)) {
                     Method method = getMethod(componentClass, nestedField);
-                    value = method.invoke(value, getParameters(nestedField));
+                    method.setAccessible(true);
+                    value = method.invoke(value, removeSingleQuotesString(getParameters(nestedField)));
                     isArray = false;
                 } else if (isArray) {
                     value = ((List<?>) value).get(Integer.parseInt(nestedField));
@@ -64,5 +65,16 @@ public class NestedReflection extends ReflectionHelper implements Reflection {
 
         return value;
 
+    }
+
+    private Object[] removeSingleQuotesString(Object[] values) {
+        Object[] newValues = new Object[values.length];
+        for (int i=0; i<values.length; i++) {
+            if (values[i] instanceof String)
+                newValues[i] = values[i].toString().replaceAll("^\\'|\\'$", "");
+            else
+                newValues[i] = values[i];
+        }
+        return newValues;
     }
 }

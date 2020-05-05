@@ -110,8 +110,10 @@ public class ReflectionHelper {
                 classes[i] = Double.class;
             else if (values[i] instanceof Long)
                 classes[i] = Long.class;
-            else if (values[i] instanceof String)
+            else if (values[i] instanceof String && values[i].toString().trim().startsWith("'") && values[i].toString().trim().endsWith("'"))
                 classes[i] = String.class;
+            else
+                classes[i] = Object.class;
         }
         return classes;
     }

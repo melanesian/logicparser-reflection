@@ -37,7 +37,7 @@ public class NestedReflectionTest extends TestCase {
     public void testInvokingMethod() {
         NumberParam numberParam = new NumberParam();
 
-        Assert.assertNull(nestedReflection.getObject(numberParam, "stringCallback(1, terlalu lama sendiri)"));
+        Assert.assertNull(nestedReflection.getObject(numberParam, "stringCallback(1, 'terlalu lama sendiri')"));
 
         Assert.assertEquals("My name is Melanesian, i'am 23 years old, my sallary is around 2000000.0 Rupiah and i already have corona",
                 nestedReflection.getObject(numberParam, "aStatement(23, 2000000D, true)"));
