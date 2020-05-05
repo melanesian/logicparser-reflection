@@ -1,6 +1,5 @@
 package com.melanesian.reflection;
 
-import com.melanesian.reflection.DataType;
 import com.melanesian.reflection.interpreter.ExpressionConstant;
 
 import java.lang.reflect.Field;
@@ -26,7 +25,9 @@ public class ReflectionHelper {
      * @return String of expression name
      */
     protected String getExpressionName(String expression) {
-        return expression.replaceAll("\\{[^)]*\\}", "");
+        return expression.replaceAll("\\".concat(ExpressionConstant.BRACKET_OPEN_STRING).concat("[^")
+                .concat(ExpressionConstant.BRACKET_CLOSED_STRING)
+                .concat("]*\\".concat(ExpressionConstant.BRACKET_CLOSED_STRING)), "");
     }
 
     /**
@@ -52,7 +53,7 @@ public class ReflectionHelper {
      * @param fieldName field name
      * @return java.lang.reflect.Field
      */
-    public Field getField(Class<?> clazz, String fieldName) {
+    Field getField(Class<?> clazz, String fieldName) {
         try {
             return clazz.getDeclaredField(fieldName);
         } catch (NoSuchFieldException nsf) {
@@ -75,7 +76,9 @@ public class ReflectionHelper {
      */
     protected Method getMethod(Class<?> claxx, String method) {
         try {
-            String methodName = method.replaceAll("\\([^)]*\\)", "");
+            String methodName = method.replaceAll("\\".concat(ExpressionConstant.PARENTHESS_OPEN_STRING).concat("[^")
+                    .concat(ExpressionConstant.PARENTHESS_CLOSED_STRING)
+                    .concat("]*\\".concat(ExpressionConstant.PARENTHESS_CLOSED_STRING)), "");
             Class<?>[] parameters = getParameterTypes(method);
 
             return claxx.getDeclaredMethod(methodName, parameters);
@@ -120,7 +123,7 @@ public class ReflectionHelper {
      * @param method method initialize
      * @return array of java.lang.Object
      */
-    protected Object[] getParameters(String method) {
+    Object[] getParameters(String method) {
         String ex = method;
 
         ex = ex.substring(ex.indexOf(ExpressionConstant.PARENTHESS_OPEN_CHARACTER) + 1);

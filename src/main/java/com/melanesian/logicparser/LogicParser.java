@@ -49,7 +49,7 @@ public class LogicParser {
         for (int i=0; i<ruleTokens.length; i++) {
             if (ruleTokens[i].contains("<")){
                 Object ruleToken = replacingBeanValues(bean, ruleTokens[i]);
-                ruleTokens[i] = ruleToken != null ? ruleToken.toString() : "false";
+                ruleTokens[i] = ruleToken != null ? ruleToken.toString() : "null";
             }
         }
         return (Boolean) scriptEngine.eval(String.join(" ", ruleTokens));
@@ -66,10 +66,11 @@ public class LogicParser {
         takeOutParenthess = takeOutParenthess.substring(takeOutParenthess.indexOf('<') + 1);
         takeOutParenthess = takeOutParenthess.substring(0, takeOutParenthess.indexOf('>'));
         Object tokenValue = reflection.getObject(bean, takeOutParenthess);
-        if (tokenValue.toString().equalsIgnoreCase("true") || tokenValue.toString().equalsIgnoreCase("false")
-                || StringUtils.isNumeric(tokenValue.toString()))
+        if ((tokenValue != null) && (tokenValue.toString().equalsIgnoreCase("true")
+                || tokenValue.toString().equalsIgnoreCase("false")
+                || StringUtils.isNumeric(tokenValue.toString())))
             return tokenValue;
         else
-            return "'".concat(tokenValue.toString()).concat("'");
+            return tokenValue != null ? "'".concat(tokenValue.toString()).concat("'"):null;
     }
 }

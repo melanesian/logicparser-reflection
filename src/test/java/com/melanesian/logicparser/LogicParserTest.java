@@ -37,6 +37,13 @@ public class LogicParserTest {
     }
 
     @Test
+    public void checkingArraysNull() throws ScriptException{
+        ClientAddress clientAddress = createClientAdress();
+        LogicParser logicParser = new LogicParser();
+        Assert.assertTrue(logicParser.parseBussinessRule(clientAddress, "<addresses.SPArrayFilter{addressName == 'address namumber 0'}> == null"));
+    }
+
+    @Test
     public void testing_Invoke_Single_Boolean() throws ScriptException {
         LogicParser logicParser = new LogicParser();
         boolean logicTest = logicParser.parseBussinessRule(createClientAdress(), "<containAddressName(address name number 1)>");

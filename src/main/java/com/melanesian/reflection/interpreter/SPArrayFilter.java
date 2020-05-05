@@ -1,6 +1,7 @@
 package com.melanesian.reflection.interpreter;
 
-import java.lang.reflect.Field;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+
 import java.util.ArrayList;
 
 /**
@@ -18,15 +19,9 @@ public class SPArrayFilter extends Expression {
         ArrayList<?> value = (ArrayList<?>) getValue();
         IllegalStateException stEx = new IllegalStateException();
         Object filteredValue = value.stream().filter(o -> {
-            try {
-                String[] splitParamByEquals = getParams()[0].split(ExpressionConstant.EQUALS_STRING);
-                Field field = getField(o.getClass(), splitParamByEquals[0].trim());
-                field.setAccessible(true);
-                return field.get(o).toString().equals(splitParamByEquals[1].trim());
-            } catch (IllegalAccessException ex) {
-                stEx.setStackTrace(ex.getStackTrace());
-                return false;
-            }
+            org.springframework.expression.ExpressionParser sprExpressionParser = new SpelExpressionParser();
+            org.springframework.expression.Expression sprExpression = sprExpressionParser.parseExpression(getParams()[0]);
+            return (boolean) sprExpression.getValue(o);
         }).findAny().orElse(null);
 
         if (stEx.getStackTrace() == null)

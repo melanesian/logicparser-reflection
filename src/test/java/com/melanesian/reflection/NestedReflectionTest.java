@@ -67,21 +67,21 @@ public class NestedReflectionTest extends TestCase {
     public void testGetWithSingleParamArrayFiltering() {
         ClientAddress clientAddress = createClientAdress();
         Assert.assertEquals("address name number 0",
-                nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 0}.addressName"));
+                nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName.equals('address name number 0')}.addressName"));
         Assert.assertEquals("address name number 1",
-                nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 1}.addressName"));
+                nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName == 'address name number 1'}.addressName"));
         Assert.assertEquals("address name number 2",
-                nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 2}.addressName"));
+                nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName == 'address name number 2'}.addressName"));
         Assert.assertEquals("address name number 3",
-                nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 3}.addressName"));
+                nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName == 'address name number 3'}.addressName"));
         Assert.assertEquals("address name number 4",
-                nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address name number 4}.addressName"));
+                nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName == 'address name number 4'}.addressName"));
     }
 
     @Test
     public void testGetWithSingleParamArrayFiltering_CannotFind() {
         ClientAddress clientAddress = createClientAdress();
-        Assert.assertNull(nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName = address namumber 0}"));
+        Assert.assertNull(nestedReflection.getObject(clientAddress, "addresses.SPArrayFilter{addressName == 'address namumber 0'}"));
     }
 
 

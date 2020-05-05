@@ -3,7 +3,6 @@ package com.melanesian.reflection;
 import com.melanesian.reflection.interpreter.Expression;
 import com.melanesian.reflection.interpreter.ExpressionConstant;
 import com.melanesian.reflection.interpreter.ExpressionFactory;
-import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -26,7 +25,7 @@ public class NestedReflection extends ReflectionHelper implements Reflection {
         if (bean == null || fieldName == null)
             throw new IllegalStateException(String.format("bean: %s, fieldName: %s", bean, fieldName));
 
-        String[] nestedFields = StringUtils.split(fieldName, ".");
+        String[] nestedFields = fieldName.split(ExpressionConstant.ARGUMENTS_SEPARATOR);
         Class < ? > componentClass = bean.getClass();
         Object value = bean;
         boolean isArray = false;
@@ -34,13 +33,13 @@ public class NestedReflection extends ReflectionHelper implements Reflection {
         try {
             for (String nestedField : nestedFields) {
                 Field field;
-                if (nestedField.contains(ExpressionConstant.PARENTHESS_OPEN_STRING)) {
-                    Method method = getMethod(componentClass, nestedField);
-                    value = method.invoke(value, getParameters(nestedField));
-                    isArray = false;
-                } else if(nestedField.contains(ExpressionConstant.BRACKET_OPEN_STRING)){
+                if(nestedField.contains(ExpressionConstant.BRACKET_OPEN_STRING)){
                     Expression expression = ExpressionFactory.newInstance().gettingExpression(value, nestedField);
                     value = expression.invokeExpression();
+                    isArray = false;
+                } else if (nestedField.contains(ExpressionConstant.PARENTHESS_OPEN_STRING)) {
+                    Method method = getMethod(componentClass, nestedField);
+                    value = method.invoke(value, getParameters(nestedField));
                     isArray = false;
                 } else if (isArray) {
                     value = ((List<?>) value).get(Integer.parseInt(nestedField));

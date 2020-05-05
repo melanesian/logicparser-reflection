@@ -9,8 +9,15 @@ public class ExpressionConstant {
         throw new IllegalStateException("This is class for some constant value in melanesian reflection");
     }
 
-    static final String EQUALS_STRING = "=";
     public static final String COMMA_STRING = ",";
+    public static final String ARGUMENTS_SEPARATOR = "\\.(?=(((?!\\".concat(ExpressionConstant.BRACKET_CLOSED_STRING)
+            .concat(").)*\\")
+            .concat(ExpressionConstant.BRACKET_OPEN_STRING)
+            .concat(")|[^\\")
+            .concat(ExpressionConstant.BRACKET_OPEN_STRING)
+            .concat("\\")
+            .concat(ExpressionConstant.BRACKET_CLOSED_STRING)
+            .concat("]*$)");
 
     public static final char BRACKET_OPEN_CHARACTER = '{';
     public static final char BRACKET_CLOSED_CHARACTER = '}';
