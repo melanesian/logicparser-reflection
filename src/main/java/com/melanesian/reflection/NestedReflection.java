@@ -71,7 +71,7 @@ public class NestedReflection extends ReflectionHelper implements Reflection {
         Object[] newValues = new Object[values.length];
         for (int i=0; i<values.length; i++) {
             if (values[i] instanceof String)
-                newValues[i] = values[i].toString().replaceAll("^\\'|\\'$", "");
+                newValues[i] = values[i].toString().replaceAll("^\'|\'$", "");
             else
                 newValues[i] = values[i];
         }
