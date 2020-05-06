@@ -37,7 +37,7 @@ public class NestedReflection extends ReflectionHelper implements Reflection {
                     Expression expression = ExpressionFactory.newInstance().gettingExpression(value, nestedField);
                     value = expression.invokeExpression();
                     isArray = false;
-                } else if (nestedField.contains(ExpressionConstant.PARENTHESS_OPEN_STRING)) {
+                } else if (nestedField.contains(ExpressionConstant.PARENTHESES_OPEN_STRING)) {
                     Method method = getMethod(componentClass, nestedField);
                     method.setAccessible(true);
                     value = method.invoke(value, removeSingleQuotesString(getParameters(nestedField)));

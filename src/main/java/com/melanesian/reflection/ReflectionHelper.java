@@ -25,7 +25,8 @@ public class ReflectionHelper {
      * @return String of expression name
      */
     protected String getExpressionName(String expression) {
-        return expression.replaceAll("\\".concat(ExpressionConstant.BRACKET_OPEN_STRING).concat("[^")
+        return expression.replaceAll(ExpressionConstant.BACK_SLASH
+                .concat(ExpressionConstant.BRACKET_OPEN_STRING).concat("[^")
                 .concat(ExpressionConstant.BRACKET_CLOSED_STRING)
                 .concat("]*\\".concat(ExpressionConstant.BRACKET_CLOSED_STRING)), "");
     }
@@ -76,9 +77,10 @@ public class ReflectionHelper {
      */
     Method getMethod(Class<?> claxx, String method) {
         try {
-            String methodName = method.replaceAll("\\".concat(ExpressionConstant.PARENTHESS_OPEN_STRING).concat("[^")
-                    .concat(ExpressionConstant.PARENTHESS_CLOSED_STRING)
-                    .concat("]*\\".concat(ExpressionConstant.PARENTHESS_CLOSED_STRING)), "");
+            String methodName = method.replaceAll(ExpressionConstant.BACK_SLASH
+                    .concat(ExpressionConstant.PARENTHESES_OPEN_STRING).concat("[^")
+                    .concat(ExpressionConstant.PARENTHESES_CLOSED_STRING)
+                    .concat("]*\\".concat(ExpressionConstant.PARENTHESES_CLOSED_STRING)), "");
             Class<?>[] parameters = getParameterTypes(method);
 
             return claxx.getDeclaredMethod(methodName, parameters);
@@ -128,8 +130,8 @@ public class ReflectionHelper {
     Object[] getParameters(String method) {
         String ex = method;
 
-        ex = ex.substring(ex.indexOf(ExpressionConstant.PARENTHESS_OPEN_CHARACTER) + 1);
-        ex = ex.substring(0, ex.indexOf(ExpressionConstant.PARENTHESS_CLOSED_CHARACTER));
+        ex = ex.substring(ex.indexOf(ExpressionConstant.PARENTHESES_OPEN_CHARACTER) + 1);
+        ex = ex.substring(0, ex.indexOf(ExpressionConstant.PARENTHESES_CLOSED_CHARACTER));
 
         String[] valueSplitter = ex.split(",");
 
